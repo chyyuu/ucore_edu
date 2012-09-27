@@ -11,7 +11,9 @@ void init(void)
 	while (1);
 #endif
 
-	puts("hello, ucore\n");
+	puts("\n<ucore> " __FILE__ "\n");
+	puts("\nhello, ucore\n");
+	puts("\ntype Ctrl+C to end this demo\n");
 
 	while (1);
 
