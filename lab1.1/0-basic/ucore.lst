@@ -16,8 +16,8 @@ Disassembly of section .text:
   18:	e59f0008 	ldr	r0, [pc, #8]	; 28 <init+0x20>
   1c:	eb00000b 	bl	50 <puts>
   20:	eafffffe 	b	20 <init+0x18>
-  24:	000000d0 	ldrdeq	r0, [r0], -r0
-  28:	000000e0 	andeq	r0, r0, r0, ror #1
+  24:	000000d4 	ldrdeq	r0, [r0], -r4
+  28:	000000e4 	andeq	r0, r0, r4, ror #1
 
 0000002c <putchar>:
   2c:	e92d4800 	push	{fp, lr}
@@ -25,10 +25,10 @@ Disassembly of section .text:
   34:	e24dd008 	sub	sp, sp, #8
   38:	e50b0008 	str	r0, [fp, #-8]
   3c:	e51b0008 	ldr	r0, [fp, #-8]
-  40:	eb000016 	bl	a0 <uart_putchar>
-  44:	e1a00003 	mov	r0, r3
-  48:	e24bd004 	sub	sp, fp, #4
-  4c:	e8bd8800 	pop	{fp, pc}
+  40:	eb000017 	bl	a4 <uart_putchar>
+  44:	e24bd004 	sub	sp, fp, #4
+  48:	e8bd4800 	pop	{fp, lr}
+  4c:	e12fff1e 	bx	lr
 
 00000050 <puts>:
   50:	e92d4800 	push	{fp, lr}
@@ -50,63 +50,60 @@ Disassembly of section .text:
   90:	e3a03000 	mov	r3, #0
   94:	e1a00003 	mov	r0, r3
   98:	e24bd004 	sub	sp, fp, #4
-  9c:	e8bd8800 	pop	{fp, pc}
+  9c:	e8bd4800 	pop	{fp, lr}
+  a0:	e12fff1e 	bx	lr
 
-000000a0 <uart_putchar>:
-  a0:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-  a4:	e28db000 	add	fp, sp, #0
-  a8:	e24dd00c 	sub	sp, sp, #12
-  ac:	e1a03000 	mov	r3, r0
-  b0:	e54b3005 	strb	r3, [fp, #-5]
-  b4:	e59f3010 	ldr	r3, [pc, #16]	; cc <uart_putchar+0x2c>
-  b8:	e55b2005 	ldrb	r2, [fp, #-5]
-  bc:	e5832000 	str	r2, [r3]
-  c0:	e28bd000 	add	sp, fp, #0
-  c4:	e8bd0800 	pop	{fp}
-  c8:	e12fff1e 	bx	lr
-  cc:	ff012000 	undefined instruction 0xff012000
+000000a4 <uart_putchar>:
+  a4:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+  a8:	e28db000 	add	fp, sp, #0
+  ac:	e24dd00c 	sub	sp, sp, #12
+  b0:	e1a03000 	mov	r3, r0
+  b4:	e54b3005 	strb	r3, [fp, #-5]
+  b8:	e59f3010 	ldr	r3, [pc, #16]	; d0 <uart_putchar+0x2c>
+  bc:	e55b2005 	ldrb	r2, [fp, #-5]
+  c0:	e5832000 	str	r2, [r3]
+  c4:	e28bd000 	add	sp, fp, #0
+  c8:	e8bd0800 	pop	{fp}
+  cc:	e12fff1e 	bx	lr
+  d0:	ff012000 	undefined instruction 0xff012000
 
 Disassembly of section .rodata:
 
-000000d0 <.rodata>:
-  d0:	6c65680a 	stclvs	8, cr6, [r5], #-40	; 0xffffffd8
-  d4:	202c6f6c 	eorcs	r6, ip, ip, ror #30
-  d8:	726f6375 	rsbvc	r6, pc, #-738197503	; 0xd4000001
-  dc:	00000a65 	andeq	r0, r0, r5, ror #20
-  e0:	7079740a 	rsbsvc	r7, r9, sl, lsl #8
-  e4:	74432065 	strbvc	r2, [r3], #-101	; 0x65
-  e8:	432b6c72 	teqmi	fp, #29184	; 0x7200
-  ec:	206f7420 	rsbcs	r7, pc, r0, lsr #8
-  f0:	20646e65 	rsbcs	r6, r4, r5, ror #28
-  f4:	73696874 	cmnvc	r9, #7602176	; 0x740000
-  f8:	6d656420 	cfstrdvs	mvd6, [r5, #-128]!	; 0xffffff80
-  fc:	00000a6f 	andeq	r0, r0, pc, ror #20
+000000d4 <.rodata>:
+  d4:	6c65680a 	stclvs	8, cr6, [r5], #-40	; 0xffffffd8
+  d8:	202c6f6c 	eorcs	r6, ip, ip, ror #30
+  dc:	726f6375 	rsbvc	r6, pc, #-738197503	; 0xd4000001
+  e0:	00000a65 	andeq	r0, r0, r5, ror #20
+  e4:	7079740a 	rsbsvc	r7, r9, sl, lsl #8
+  e8:	74432065 	strbvc	r2, [r3], #-101	; 0x65
+  ec:	432b6c72 	teqmi	fp, #29184	; 0x7200
+  f0:	206f7420 	rsbcs	r7, pc, r0, lsr #8
+  f4:	20646e65 	rsbcs	r6, r4, r5, ror #28
+  f8:	73696874 	cmnvc	r9, #7602176	; 0x740000
+  fc:	6d656420 	cfstrdvs	mvd6, [r5, #-128]!	; 0xffffff80
+ 100:	00000a6f 	andeq	r0, r0, pc, ror #20
 
 Disassembly of section .ARM.attributes:
 
 00000000 <.ARM.attributes>:
-   0:	00003341 	andeq	r3, r0, r1, asr #6
+   0:	00002541 	andeq	r2, r0, r1, asr #10
    4:	61656100 	cmnvs	r5, r0, lsl #2
    8:	01006962 	tsteq	r0, r2, ror #18
-   c:	00000029 	andeq	r0, r0, r9, lsr #32
-  10:	4d524105 	ldfmie	f4, [r2, #-20]	; 0xffffffec
-  14:	36373131 	undefined instruction 0x36373131
-  18:	2d465a4a 	vstrcs	s11, [r6, #-296]	; 0xfffffed8
-  1c:	09060053 	stmdbeq	r6, {r0, r1, r4, r6}
-  20:	01090108 	tsteq	r9, r8, lsl #2
-  24:	0412020a 	ldreq	r0, [r2], #-522	; 0x20a
-  28:	01150114 	tsteq	r5, r4, lsl r1
-  2c:	01180317 	tsteq	r8, r7, lsl r3
-  30:	031b021a 	tsteq	fp, #-1610612735	; 0xa0000001
+   c:	0000001b 	andeq	r0, r0, fp, lsl r0
+  10:	00543405 	subseq	r3, r4, r5, lsl #8
+  14:	01080206 	tsteq	r8, r6, lsl #4
+  18:	04120109 	ldreq	r0, [r2], #-265	; 0x109
+  1c:	01150114 	tsteq	r5, r4, lsl r1
+  20:	01180317 	tsteq	r8, r7, lsl r3
+  24:	Address 0x00000024 is out of bounds.
+
 
 Disassembly of section .comment:
 
 00000000 <.comment>:
-   0:	3a434347 	bcc	10d0d24 <uart_putchar+0x10d0c84>
+   0:	3a434347 	bcc	10d0d24 <uart_putchar+0x10d0c80>
    4:	74632820 	strbtvc	r2, [r3], #-2080	; 0x820
    8:	312d676e 	teqcc	sp, lr, ror #14
-   c:	312e382e 	teqcc	lr, lr, lsr #16
-  10:	2941462d 	stmdbcs	r1, {r0, r2, r3, r5, r9, sl, lr}^
-  14:	352e3420 	strcc	r3, [lr, #-1056]!	; 0x420
-  18:	Address 0x00000018 is out of bounds.
-
+   c:	312e362e 	teqcc	lr, lr, lsr #12
+  10:	2e342029 	cdpcs	0, 3, cr2, cr4, cr9, {1}
+  14:	00332e34 	eorseq	r2, r3, r4, lsr lr
