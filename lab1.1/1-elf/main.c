@@ -26,15 +26,17 @@ void load_elf_from(int elf_addr)
 	int p_ucore_exec;	// exec addr to go
 	int i;
 
-	// .text is at offset 0x8000
-	// 0x81b0 is read from run commmand <hexdump -C ucore.elf | grep "d0 00">
-	// while "d0 00" is read from run command <readelf -a ucore.elf | grep ".text">
-	// .text section header base addr
-	//
+	// you can use these command to confirm 
+		// <readelf -a ucore.elf | grep ".text">
+		// <hexdump -C ucore.elf>
+
+	// 0x20 is offset in ELF header which tells section header table base addr
 	int sh_base = *(int *)(0x20 + elf_addr);
 
-	int text_sh_base = sh_base + 0x28;	// 40 bytes for one section header 
+	// 40 bytes for one section header and .text is the [1] in this table in most cases
+	int text_sh_base = sh_base + 0x28;	
 
+	// print debug info
 	puts("ucore section header base addr: ");
 	putint_hex(sh_base);
 	putchar('\n');
@@ -43,6 +45,7 @@ void load_elf_from(int elf_addr)
 	putint_hex(text_sh_base);
 	putchar('\n');
 
+	// 0xc 0x10 0x14 is offset which tells <exec addr> <load addr> <size>
 	p_ucore_off = *(int *)(text_sh_base+0x10 + 0x1000);	
 	ucore_size = *(int *)(text_sh_base+0x14 + 0x1000);
 	p_ucore_exec = *(int *)(text_sh_base+0xc + 0x1000);
@@ -57,9 +60,10 @@ void load_elf_from(int elf_addr)
 	putint_hex(p_ucore_exec);
 	putchar('\n');
 
-	// add .rodata size to loader
+	// add .rodata size (maybe 100 is enough) to loader
 	ucore_size += 100;
 
+	// just copy to load .text and .rodata into exec addr
 	for (i = 0; i < ucore_size/4; i++)
 		*(int *)(p_ucore_exec+i*4) = *(int *)(p_ucore_off+i*4+elf_addr);
 
